@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Unit 1: Real Numbers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.7;
+        }
+
+        /* --- Header --- */
+        header {
+            background: linear-gradient(135deg, var(--primary), #818cf8);
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);
+            margin-bottom: 3rem;
+        }
+        
+        header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        header .subtitle { font-size: 1.1rem; opacity: 0.9; }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px 50px 20px;
+        }
+
+        section { margin-bottom: 4rem; }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .section-badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        /* --- Cards Grid --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        .card-top-border {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: var(--primary);
+        }
+
+        .card h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.25rem; }
+        
+        /* --- Math Lists --- */
+        ul.math-list { list-style: none; }
+        ul.math-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border);
+            display: flex;
+            align-items: center;
+        }
+        ul.math-list li::before {
+            content: "•";
+            color: var(--secondary);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* --- Interactive Solution Box --- */
+        .interactive-box {
+            background: white;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent);
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-text { font-weight: 500; margin-bottom: 15px; }
+
+        .reveal-btn {
+            background: var(--dark);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        .reveal-btn:hover { background: var(--primary); }
+
+        .answer-panel {
+            margin-top: 15px;
+            padding: 15px;
+            background: #ecfeff; /* cyan-50 */
+            border-radius: 8px;
+            color: #0e7490;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- Number Line Visualization --- */
+        .number-line-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+        }
+        .line-graphic {
+            height: 4px;
+            background: var(--dark);
+            width: 80%;
+            margin: 20px auto;
+            position: relative;
+            border-radius: 2px;
+        }
+        .point {
+            position: absolute;
+            top: -6px;
+            width: 16px;
+            height: 16px;
+            background: var(--secondary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .point-label {
+            position: absolute;
+            top: 15px;
+            transform: translateX(-50%);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* --- Comparison Table --- */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .compare-table th { background: var(--primary); color: white; padding: 15px; text-align: left; }
+        .compare-table td { padding: 15px; border-bottom: 1px solid var(--border); }
+        .compare-table tr:last-child td { border-bottom: none; }
+
+        /* --- Venn Diagram Representation --- */
+        .venn-box {
+            border: 2px solid #cbd5e1;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 10px;
+            text-align: center;
+            background: rgba(255,255,255,0.5);
+        }
+        .venn-title { font-weight: bold; display: block; margin-bottom: 10px; color: #64748b; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 50px;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="subtitle">Unit 1: Numbers and their operations</div>
+        <h1>Lesson One: Real Numbers</h1>
+        <p>From Rational ($\mathbb{Q}$) to Real ($\mathbb{R}$)</p>
+    </header>
+
+    <div class="container">
+
+        <section id="part1">
+            <div class="section-header">
+                <span class="section-badge">Part 1</span>
+                <h2 class="section-title">Review: Sets of Numbers</h2>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <div class="card-top-border" style="background: #10b981;"></div>
+                    <h3>Natural Numbers $\mathbb{N}$</h3>
+                    <p>$\mathbb{N}=\{0,1,2,3,4,...\}$</p>
+                </div>
+                <div class="card">
+                    <div class="card-top-border" style="background: #3b82f6;"></div>
+                    <h3>Integers $\mathbb{Z}$</h3>
+                    <p>$\mathbb{Z}=\{...,-2,-1,0,1,2,...\}$</p>
+                </div>
+                <div class="card">
+                    <div class="card-top-border" style="background: #f59e0b;"></div>
+                    <h3>Rational Numbers $\mathbb{Q}$</h3>
+                    <p>$\mathbb{Q}=\{\frac{a}{b}, a \in \mathbb{Z}, b \in \mathbb{Z}, b \ne 0\}$</p>
+                    <hr style="margin:10px 0; border:0; border-top:1px dashed #ddd;">
+                    <p><strong>Examples:</strong> $\frac{3}{4}, -0.2, 13\%, \sqrt{36}, 0.\overline{7}$</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="part2">
+            <div class="section-header">
+                <span class="section-badge">Part 2</span>
+                <h2 class="section-title">The Set of Irrational Numbers ($\mathbb{Q}'$)</h2>
+            </div>
+            
+            <div class="card" style="margin-bottom: 30px; border-left: 5px solid var(--secondary);">
+                <h3>Definition</h3>
+                <p>An irrational number is a number that <strong>cannot</strong> be written in the form $\frac{a}{b}$ (where a, b are integers and $b \neq 0$).</p>
+                <p style="margin-top:10px;"><strong>Note:</strong> $\mathbb{Q} \cap \mathbb{Q}' = \emptyset$ (They are disjoint sets).</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>1. Non-Perfect Squares</h3>
+                    <p>Square roots of numbers that are not perfect squares.</p>
+                    <ul class="math-list" style="margin-top:10px;">
+                        <li>$\sqrt{2}$ (No rational number squared = 2)</li>
+                        <li>$\sqrt{5}, \sqrt{18}, \sqrt{25}+\sqrt{7}$</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>2. Non-Perfect Cubes</h3>
+                    <p>Cube roots of numbers that are not perfect cubes.</p>
+                    <ul class="math-list" style="margin-top:10px;">
+                        <li>$\sqrt[3]{4}$ (No rational number cubed = 4)</li>
+                        <li>$\sqrt[3]{-9}, \sqrt[3]{7}, \sqrt[3]{25}$</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>3. The Ratio $\pi$</h3>
+                    <p>Pi ($\pi$) is the ratio of circle circumference to diameter.</p>
+                    <p>$\pi \approx 3.14159...$</p>
+                    <small>Note: $\frac{22}{7}$ and $3.14$ are just approximations, not exact values.</small>
+                </div>
+            </div>
+
+            <div class="interactive-box">
+                <div class="question-text">
+                    <strong>Example 1:</strong> Which of the following are Rational ($\mathbb{Q}$) vs Irrational ($\mathbb{Q}'$)?
+                    <br><br>
+                    1) $0.73$ &nbsp;&nbsp; 2) $\sqrt{8}$ &nbsp;&nbsp; 3) $\pi+2$ &nbsp;&nbsp; 4) $\sqrt[3]{-8}$ &nbsp;&nbsp; 5) $\sqrt{25}+\sqrt{7}$
+                </div>
+                <button class="reveal-btn" onclick="toggleAns('ans1')">Show Answer</button>
+                <div id="ans1" class="answer-panel">
+                    <ol style="margin-left: 20px;">
+                        <li><strong>$0.73$:</strong> Rational ($\frac{73}{100}$).</li>
+                        <li><strong>$\sqrt{8}$:</strong> Irrational (8 is not a perfect square).</li>
+                        <li><strong>$\pi+2$:</strong> Irrational (Contains $\pi$).</li>
+                        <li><strong>$\sqrt[3]{-8}$:</strong> Rational (Equals $-2$).</li>
+                        <li><strong>$\sqrt{25}+\sqrt{7}$:</strong> Irrational (Equals $5 + \sqrt{7}$, and 7 is not a perfect square).</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="part3">
+            <div class="section-header">
+                <span class="section-badge">Part 3</span>
+                <h2 class="section-title">Approximating Irrational Numbers</h2>
+            </div>
+            
+            <p style="margin-bottom: 20px;">Any irrational number lies between two rational numbers (often two consecutive integers).</p>
+
+            <div class="card">
+                <h3>Example: Estimate $\sqrt{18}$</h3>
+                <p>Find two consecutive integers between which $\sqrt{18}$ lies.</p>
+                <div style="background: #f8fafc; padding: 15px; margin: 15px 0; border-radius: 8px;">
+                    <p>1. Find perfect squares surrounding 18:</p>
+                    <p>$$ 16 < 18 < 25 $$</p>
+                    <p>2. Take the square root:</p>
+                    <p>$$ \sqrt{16} < \sqrt{18} < \sqrt{25} $$</p>
+                    <p>$$ 4 < \sqrt{18} < 5 $$</p>
+                </div>
+                <p>Since 18 is closer to 16 than 25, $\sqrt{18}$ is closer to 4 ($\approx 4.24$).</p>
+                
+                <div class="number-line-container">
+                    <p>Number Line Visualization</p>
+                    <div class="line-graphic">
+                        <div class="point" style="left: 0%;"></div>
+                        <span class="point-label" style="left: 0%; top: 20px;">4<br>($\sqrt{16}$)</span>
+                        
+                        <div class="point" style="left: 24%; background: var(--secondary);"></div>
+                        <span class="point-label" style="left: 24%; top: -30px; color: var(--secondary);">$\sqrt{18}$</span>
+                        
+                        <div class="point" style="left: 100%;"></div>
+                        <span class="point-label" style="left: 100%; top: 20px;">5<br>($\sqrt{25}$)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="part4">
+            <div class="section-header">
+                <span class="section-badge">Part 4</span>
+                <h2 class="section-title">The Set of Real Numbers ($\mathbb{R}$)</h2>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: var(--primary);">$\mathbb{R} = \mathbb{Q} \cup \mathbb{Q}'$</h1>
+            </div>
+
+            <div class="venn-box" style="background: #eff6ff; border-color: #3b82f6;">
+                <span class="venn-title" style="color: #1e40af;">Real Numbers ($\mathbb{R}$)</span>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    
+                    <div class="venn-box" style="flex: 1; background: white; border-color: #fca5a5;">
+                        <span class="venn-title">Irrational ($\mathbb{Q}'$)</span>
+                        <p>$\sqrt{2}, \pi, \sqrt[3]{5}$</p>
+                    </div>
+
+                    <div class="venn-box" style="flex: 2; background: white; border-color: #6ee7b7;">
+                        <span class="venn-title">Rational ($\mathbb{Q}$)</span>
+                        
+                        <div class="venn-box" style="background: #f0fdf4;">
+                            <span class="venn-title">Integers ($\mathbb{Z}$)</span>
+                            
+                            <div class="venn-box" style="background: #dcfce7;">
+                                <span class="venn-title">Natural ($\mathbb{N}$)</span>
+                                <small>0, 1, 2...</small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="interactive-box">
+                <div class="question-text">
+                    <strong>Practice:</strong> Put the appropriate symbol ($\in, \notin, \subset, \not\subset$):
+                </div>
+                <table class="compare-table">
+                    <tr>
+                        <td>1) $\sqrt{2} \dots \mathbb{Q}$</td>
+                        <td>2) $1.5 \dots \mathbb{R}$</td>
+                        <td>3) $\{3, \sqrt[3]{4}\} \dots \mathbb{Q}$</td>
+                        <td>4) $\sqrt{-4} \dots \mathbb{R}$</td>
+                    </tr>
+                </table>
+                <button class="reveal-btn" onclick="toggleAns('ans2')">Show Answers</button>
+                <div id="ans2" class="answer-panel">
+                    <ol>
+                        <li>$\notin$ (Irrational)</li>
+                        <li>$\in$ (Real)</li>
+                        <li>$\not\subset$ (Because $\sqrt[3]{4}$ is not rational)</li>
+                        <li>$\notin$ (Square root of negative number is undefined in $\mathbb{R}$)</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="part5">
+            <div class="section-header">
+                <span class="section-badge">Part 5</span>
+                <h2 class="section-title">Solving Equations</h2>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>Example A: Solution in $\mathbb{Q}$</h3>
+                    <p>Solve: $5x^2 - 3 = 7$</p>
+                    <hr style="margin: 10px 0; opacity: 0.3;">
+                    <div style="font-family: monospace; color: #444;">
+                        <p>$5x^2 = 7 + 3$</p>
+                        <p>$5x^2 = 10$</p>
+                        <p>$x^2 = 2$</p>
+                        <p>$x = \pm\sqrt{2}$</p>
+                    </div>
+                    <div style="margin-top: 10px; padding: 10px; background: #dbeafe; border-radius: 5px;">
+                        <p><strong>Condition:</strong> If $x \in \mathbb{Q}$, S.S = $\emptyset$ (because $\sqrt{2} \notin \mathbb{Q}$)</p>
+                        <p><strong>Condition:</strong> If $x \in \mathbb{R}$, S.S = $\{-\sqrt{2}, \sqrt{2}\}$</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Example B: No Solution</h3>
+                    <p>Solve: $3x^2 + 5 = -4$</p>
+                    <hr style="margin: 10px 0; opacity: 0.3;">
+                    <div style="font-family: monospace; color: #444;">
+                        <p>$3x^2 = -4 - 5$</p>
+                        <p>$3x^2 = -9$</p>
+                        <p>$x^2 = -3$</p>
+                        <p>$x = \pm\sqrt{-3}$</p>
+                    </div>
+                    <div style="margin-top: 10px; padding: 10px; background: #fee2e2; border-radius: 5px; color: #991b1b;">
+                        <p><strong>Result:</strong> $\sqrt{-3} \notin \mathbb{R}$</p>
+                        <p>S.S = $\emptyset$</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Example C: Cubic Equation</h3>
+                    <p>Solve: $\frac{1}{8}x^3 = 1$</p>
+                    <hr style="margin: 10px 0; opacity: 0.3;">
+                    <div style="font-family: monospace; color: #444;">
+                        <p>$x^3 = 1 \div \frac{1}{8}$</p>
+                        <p>$x^3 = 8$</p>
+                        <p>$x = \sqrt[3]{8}$</p>
+                        <p>$x = 2$</p>
+                    </div>
+                    <div style="margin-top: 10px; padding: 10px; background: #d1fae5; border-radius: 5px; color: #065f46;">
+                        <p>S.S = $\{2\}$</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="part6">
+            <div class="section-header">
+                <span class="section-badge">Part 6</span>
+                <h2 class="section-title">Applications & Geometry</h2>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3><span style="font-size:1.5em;">📐</span> Geometry</h3>
+                    <p><strong>Square Area:</strong> If Area = $29 cm^2$.</p>
+                    <p>Side Length $L = \sqrt{29}$ cm.</p>
+                    <p>$\sqrt{29}$ is Irrational ($\mathbb{Q}'$).</p>
+                    <br>
+                    <p><strong>Diagonal:</strong> If side = 6cm.</p>
+                    <p>Diagonal = $\sqrt{6^2 + 6^2} = \sqrt{72}$ cm.</p>
+                </div>
+                
+                <div class="card">
+                    <h3><span style="font-size:1.5em;">🐚</span> Nature (Golden Ratio)</h3>
+                    <p>The Golden Ratio appears in nature (e.g., shells).</p>
+                    <p>Value $\approx 1.618...$</p>
+                    <p>Exact form: $\frac{1+\sqrt{5}}{2}$</p>
+                    <p>This is an <strong>Irrational</strong> number.</p>
+                </div>
+            </div>
+            
+            <div class="interactive-box">
+                <div class="question-text">
+                    <strong>Creative Thinking:</strong> Find an irrational number between $0.\overline{3}$ and $0.\overline{6}$.
+                </div>
+                <button class="reveal-btn" onclick="toggleAns('ans3')">Show Hint & Answer</button>
+                <div id="ans3" class="answer-panel">
+                    <p>$0.\overline{3} \approx 0.333...$</p>
+                    <p>$0.\overline{6} \approx 0.666...$</p>
+                    <p>We need a number that does not repeat and does not end between 0.33 and 0.66.</p>
+                    <p><strong>Possible Answer:</strong> $0.414213...$ (which is $\sqrt{2}-1$) or simply $\sqrt{0.2}$ etc. Or explicitly construct one: $0.404004000...$</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Interactive Lesson Design | Based on El-Moasser Content | Real Numbers Unit 1</p>
+        <p>&copy; 2024 Education Revamp</p>
+    </footer>
+
+    <script>
+        function toggleAns(id) {
+            var x = document.getElementById(id);
+            var btn = x.previousElementSibling; // The button
+            
+            if (x.style.display === "none" || x.style.display === "") {
+                x.style.display = "block";
+                btn.textContent = "Hide Answer";
+                btn.style.background = "#ec4899"; // Secondary color
+            } else {
+                x.style.display = "none";
+                btn.textContent = "Show Answer";
+                btn.style.background = "#1e293b"; // Dark color
+            }
+        }
+    </script>
+</body>
+</html>
